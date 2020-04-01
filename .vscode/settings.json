@@ -1,0 +1,6 @@
+{
+	"editor.formatOnSave": true,
+	"editor.insertSpaces": false,
+	"editor.renderWhitespace": "none",
+    "editor.trimAutoWhitespace": true,
+}

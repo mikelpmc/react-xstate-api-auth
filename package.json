@@ -1,0 +1,12 @@
+{
+  "name": "react-xstate-api-auth",
+  "version": "1.0.0",
+  "description": "Basic demo to show the usage of React and Xstate with authentication flow",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
