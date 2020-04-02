@@ -7,9 +7,9 @@ import EVENTS from './events';
 const createAuthMachine = ({ authService }) =>
   Machine({
     id: 'authMachine',
-    initial: STATES.IDLE,
+    initial: authService.isLoggedIn() ? 'login' : 'idle',
     context: {
-      isLoggedIn: false,
+      isLoggedIn: authService.isLoggedIn(),
       isRegistered: false,
       user: {},
       error: ''
@@ -137,13 +137,7 @@ const createAuthMachine = ({ authService }) =>
             },
             on: {
               [EVENTS.LOGOUT]: {
-                target: `#authMachine.${STATES.IDLE}`,
-                actions: assign({
-                  isLoggedIn: false,
-                  isRegistered: false,
-                  error: '',
-                  user: {}
-                })
+                target: 'logout'
               }
             }
           },
@@ -151,6 +145,30 @@ const createAuthMachine = ({ authService }) =>
             on: {
               [EVENTS.LOGIN]: {
                 target: `#authMachine.${STATES.LOGIN.NODE_NAME}.${STATES.LOGIN.LOADING}`
+              }
+            }
+          },
+          logout: {
+            invoke: {
+              id: 'logoutService',
+              src: () => authService.logout(),
+              onDone: {
+                target: '#authMachine.idle',
+                actions: assign({
+                  isLoggedIn: false,
+                  isRegistered: false,
+                  error: false,
+                  user: {}
+                })
+              },
+              onError: {
+                target: '#authMachine.idle',
+                actions: assign({
+                  isLoggedIn: false,
+                  isRegistered: false,
+                  error: false,
+                  user: {}
+                })
               }
             }
           }
