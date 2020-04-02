@@ -47,8 +47,20 @@ const createAuthMachine = ({ authService }) =>
               }
             }
           },
-          [STATES.REGISTER.SUCCESS]: {},
-          [STATES.REGISTER.FAILURE]: {}
+          [STATES.REGISTER.SUCCESS]: {
+            on: {
+              [EVENTS.LOGIN]: {
+                target: `#authMachine.${STATES.LOGIN.NODE_NAME}.${STATES.LOGIN.LOADING}`
+              }
+            }
+          },
+          [STATES.REGISTER.FAILURE]: {
+            on: {
+              [EVENTS.REGISTER]: {
+                target: `#authMachine.${STATES.REGISTER.NODE_NAME}.${STATES.REGISTER.LOADING}`
+              }
+            }
+          }
         }
       },
       [STATES.LOGIN.NODE_NAME]: {
@@ -78,24 +90,49 @@ const createAuthMachine = ({ authService }) =>
             }
           },
           [STATES.LOGIN.SUCCESS]: {
-            invoke: {
-              id: 'retrieveUserService',
-              src: authService.retrieveUser,
-              onDone: {
-                actions: assign({
-                  user: (_, event) => {
-                    return event.data;
+            initial: 'idle',
+            states: {
+              idle: {
+                on: {
+                  [EVENTS.RETRIEVE_USER]: {
+                    target: STATES.RETRIEVE_USER.NODE_NAME
                   }
-                })
+                }
               },
-              onError: {
-                target: STATES.LOGIN.FAILURE,
-                actions: assign({
-                  user: {},
-                  error: (_, event) => {
-                    return event.data.message;
+              [STATES.RETRIEVE_USER.NODE_NAME]: {
+                initial: STATES.RETRIEVE_USER.LOADING,
+                states: {
+                  [STATES.RETRIEVE_USER.LOADING]: {
+                    invoke: {
+                      id: 'retrieveUserService',
+                      src: () => authService.retrieveUser(),
+                      onDone: {
+                        target: STATES.RETRIEVE_USER.SUCCESS,
+                        actions: assign({
+                          user: (_, event) => {
+                            return event.data;
+                          }
+                        })
+                      },
+                      onError: {
+                        target: STATES.RETRIEVE_USER.FAILURE,
+                        actions: assign({
+                          error: (_, event) => {
+                            return event.data.message;
+                          }
+                        })
+                      }
+                    }
+                  },
+                  [STATES.RETRIEVE_USER.SUCCESS]: {},
+                  [STATES.RETRIEVE_USER.FAILURE]: {
+                    on: {
+                      [EVENTS.RETRY_RETRIEVE_USER]: {
+                        target: STATES.RETRIEVE_USER.LOADING
+                      }
+                    }
                   }
-                })
+                }
               }
             },
             on: {
@@ -110,7 +147,13 @@ const createAuthMachine = ({ authService }) =>
               }
             }
           },
-          [STATES.LOGIN.FAILURE]: {}
+          [STATES.LOGIN.FAILURE]: {
+            on: {
+              [EVENTS.LOGIN]: {
+                target: `#authMachine.${STATES.LOGIN.NODE_NAME}.${STATES.LOGIN.LOADING}`
+              }
+            }
+          }
         }
       }
     }

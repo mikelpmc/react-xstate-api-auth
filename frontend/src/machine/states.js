@@ -11,6 +11,12 @@ const STATES = {
     LOADING: 'loading',
     SUCCESS: 'success',
     FAILURE: 'failure'
+  },
+  RETRIEVE_USER: {
+    NODE_NAME: 'retrieve_user',
+    LOADING: 'loading',
+    SUCCESS: 'success',
+    FAILURE: 'failure'
   }
 };
 

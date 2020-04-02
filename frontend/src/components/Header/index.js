@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './index.css';
+import { Context } from '../../provider';
 
-const Header = ({ store, actions }) => {
+const Header = () => {
+  const {
+    store: {
+      context: { isLoggedIn }
+    },
+    actions
+  } = useContext(Context);
+
   return (
     <header>
       <nav>
@@ -10,13 +18,13 @@ const Header = ({ store, actions }) => {
           <li className="navbar__item">
             <Link to="/">Landing</Link>
           </li>
-          {store.isLoggedIn ? (
+          {isLoggedIn ? (
             <React.Fragment>
               <li className="navbar__item">
                 <Link to="/dashboard">Dashboard</Link>
               </li>
               <li className="navbar__item navbar__item--right">
-                <button onClick={actions.logout}>Logout</button>
+                <button onClick={actions.onLogout}>Logout</button>
               </li>
             </React.Fragment>
           ) : (
@@ -35,4 +43,4 @@ const Header = ({ store, actions }) => {
   );
 };
 
-export default withState(Header);
+export default Header;

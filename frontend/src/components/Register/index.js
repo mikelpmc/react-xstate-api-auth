@@ -1,52 +1,66 @@
-import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
-
-import withState from './../../utils/withState';
-
+import React, { useContext, useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { Context } from '../../provider';
+import { STATES } from '../../machine';
 import './index.css';
 
-const Register = ({ store, actions }) => {
-    return (
-        <div className="register">
-            <h1 className="register__title">Register</h1>
+const Register = () => {
+  const { store, actions } = useContext(Context);
 
-            {store.error && <p className="register__error">{store.error}!</p>}
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-            <form className="register__form" onSubmit={actions.onRegister}>
-                <input
-                    type="text"
-                    value={store.name}
-                    name="name"
-                    onChange={e => actions.handleChange(e)}
-                    placeholder="Enter your name"
-                />
-                <br />
+  const handleSubmit = e => {
+    e.preventDefault();
 
-                <input
-                    type="text"
-                    value={store.email}
-                    name="email"
-                    onChange={e => actions.handleChange(e)}
-                    placeholder="Enter your email"
-                />
-                <br />
+    actions.onRegister(name, email, password);
+  };
 
-                <input
-                    type="password"
-                    value={store.password}
-                    name="password"
-                    onChange={e => actions.handleChange(e)}
-                    placeholder="Enter your password"
-                />
-                <br />
+  return (
+    <div className="register">
+      <h1 className="register__title">Register</h1>
 
-                <button className="register__button" type="submit">
-                    Register
-                </button>
-                <Link to="/login">Login</Link>
-            </form>
-        </div>
-    );
+      {store.matches({ [STATES.REGISTER.NODE_NAME]: STATES.REGISTER.FAILURE }) && <p>Error! {store.context.error}</p>}
+      {store.matches({ [STATES.REGISTER.NODE_NAME]: STATES.REGISTER.LOADING }) && <p>Registering your data...</p>}
+      {store.matches({ [STATES.REGISTER.NODE_NAME]: STATES.REGISTER.SUCCESS }) && <Redirect to="/login" />}
+
+      <form className="register__form" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={name}
+          name="name"
+          onChange={e => setName(e.target.value)}
+          placeholder="Enter your name"
+        />
+        <br />
+
+        <input
+          type="text"
+          value={email}
+          name="email"
+          onChange={e => setEmail(e.target.value)}
+          placeholder="Enter your email"
+        />
+        <br />
+
+        <input
+          type="password"
+          value={password}
+          name="password"
+          onChange={e => setPassword(e.target.value)}
+          placeholder="Enter your password"
+        />
+        <br />
+
+        <button className="register__button" type="submit">
+          Register
+        </button>
+
+        <Link to="/login">Login</Link>
+      </form>
+    </div>
+  );
 };
 
-export default withRouter(withState(Register));
+export default Register;

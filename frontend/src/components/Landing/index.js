@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { Context } from '../../provider';
 import './index.css';
 
 const Landing = () => {

@@ -9,7 +9,7 @@ const PrivateRoute = ({ children, ...rest }) => {
     <Route
       {...rest}
       render={({ location }) =>
-        store.isLoggedIn ? (
+        store.context.isLoggedIn ? (
           children
         ) : (
           <Redirect
