@@ -70,6 +70,8 @@ class AuthService {
   login(email, password) {
     const API_URL = this.config.get('API_URL');
 
+    if (this.isLoggedIn()) return Promise.resolve().then(() => true);
+
     return Promise.resolve().then(() => {
       this._validateEmail(email);
       this._validateStringField('password', password);
@@ -101,10 +103,12 @@ class AuthService {
   }
 
   logout() {
-    delete this.token;
-    delete this.userId;
+    return Promise.resolve().then(() => {
+      delete this.token;
+      delete this.userId;
 
-    sessionStorage.clear();
+      sessionStorage.clear();
+    });
   }
 
   retrieveUser() {

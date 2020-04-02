@@ -10,7 +10,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     onRetrieveUser();
-  }, []);
+  }, [store]);
 
   const loading = 'login.success.retrieve_user.loading';
   const failure = 'login.success.retrieve_user.failure';
