@@ -1,35 +1,34 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-
-import withState from './../../utils/withState';
-
 import './index.css';
 
-const Landing = ({ store }) => {
-    return (
-        <div className="landing">
-            <h1 className="landing__title">React Context API Auth Demo</h1>
+const Landing = () => {
+  const { store } = useContext(Context);
 
-            {!store.isLoggedIn ? (
-                <React.Fragment>
-                    <Link to="/login" className="landing__button">
-                        Login
-                    </Link>
+  return (
+    <div className="landing">
+      <h1 className="landing__title">React Xstate auth demo</h1>
 
-                    <Link to="/register" className="landing__button">
-                        Register
-                    </Link>
-                </React.Fragment>
-            ) : (
-                <React.Fragment>
-                    <p>Welcome back!</p>
-                    <Link to="/dashboard" className="landing__button">
-                        Go to Dashboard
-                    </Link>
-                </React.Fragment>
-            )}
-        </div>
-    );
+      {!store.context.isLoggedIn ? (
+        <React.Fragment>
+          <Link to="/login" className="landing__button">
+            Login
+          </Link>
+
+          <Link to="/register" className="landing__button">
+            Register
+          </Link>
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <p>Welcome back!</p>
+          <Link to="/dashboard" className="landing__button">
+            Go to Dashboard
+          </Link>
+        </React.Fragment>
+      )}
+    </div>
+  );
 };
 
-export default withState(Landing);
+export default Landing;

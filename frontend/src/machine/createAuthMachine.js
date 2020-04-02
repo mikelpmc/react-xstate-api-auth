@@ -1,62 +1,116 @@
 import { Machine, assign } from 'xstate';
+import STATES from './states';
+import EVENTS from './events';
 
-const STATES = {
-  IDLE: 'idle',
-  REGISTER: {
-    LOADING: 'loading',
-    SUCCESS: 'success',
-    FAILURE: 'failure'
-  },
-  LOGIN: {
-    LOADING: 'loading',
-    SUCCESS: 'success',
-    FAILURE: 'failure'
-  }
-};
-
-const EVENTS = {
-  REGISTER: 'register',
-  LOGIN: 'login',
-  LOGOUT: 'logout'
-};
+// https://xstate.js.org/viz/?gist=94e9a29e1ab016e06b8b354b9d558cf2
 
 const createAuthMachine = ({ authService }) =>
   Machine({
     id: 'authMachine',
-    initial: 'idle',
+    initial: STATES.IDLE,
     context: {
-      isLoggedIn: null,
+      isLoggedIn: false,
       isRegistered: false,
       user: {},
-      name: '',
-      email: '',
-      password: '',
       error: ''
     },
     states: {
-      idle: {
+      [STATES.IDLE]: {
         on: {
-          register: { target: 'register' }
+          [EVENTS.REGISTER]: { target: STATES.REGISTER.NODE_NAME },
+          [EVENTS.LOGIN]: { target: STATES.LOGIN.NODE_NAME }
         }
       },
-      register: {
-        initial: 'loading',
+      [STATES.REGISTER.NODE_NAME]: {
+        initial: STATES.REGISTER.LOADING,
         states: {
-          loading: {
+          [STATES.REGISTER.LOADING]: {
             invoke: {
               id: 'registerService',
               src: (_, event) => authService.register(event.name, event.email, event.password),
               onDone: {
-                target: 'success',
+                target: STATES.REGISTER.SUCCESS,
                 actions: assign({
                   isRegistered: (_, event) => {
                     return event.data;
                   }
                 })
+              },
+              onError: {
+                target: STATES.REGISTER.FAILURE,
+                actions: assign({
+                  isRegistered: false,
+                  error: (_, event) => {
+                    return event.data.message;
+                  }
+                })
               }
             }
           },
-          success: {}
+          [STATES.REGISTER.SUCCESS]: {},
+          [STATES.REGISTER.FAILURE]: {}
+        }
+      },
+      [STATES.LOGIN.NODE_NAME]: {
+        initial: STATES.LOGIN.LOADING,
+        states: {
+          [STATES.LOGIN.LOADING]: {
+            invoke: {
+              id: 'loginService',
+              src: (_, event) => authService.login(event.email, event.password),
+              onDone: {
+                target: STATES.LOGIN.SUCCESS,
+                actions: assign({
+                  isLoggedIn: (_, event) => {
+                    return event.data;
+                  }
+                })
+              },
+              onError: {
+                target: STATES.LOGIN.FAILURE,
+                actions: assign({
+                  isRegistered: false,
+                  error: (_, event) => {
+                    return event.data.message;
+                  }
+                })
+              }
+            }
+          },
+          [STATES.LOGIN.SUCCESS]: {
+            invoke: {
+              id: 'retrieveUserService',
+              src: authService.retrieveUser,
+              onDone: {
+                actions: assign({
+                  user: (_, event) => {
+                    return event.data;
+                  }
+                })
+              },
+              onError: {
+                target: STATES.LOGIN.FAILURE,
+                actions: assign({
+                  user: {},
+                  error: (_, event) => {
+                    return event.data.message;
+                  }
+                })
+              }
+            },
+            on: {
+              [EVENTS.LOGOUT]: {
+                target: `#authMachine.${STATES.IDLE}`,
+                actions: assign({
+                  isLoggedIn: false,
+                  isRegistered: false,
+                  error: '',
+                  user: {}
+                })
+              }
+            }
+          },
+          [STATES.LOGIN.FAILURE]: {}
         }
       }
     }

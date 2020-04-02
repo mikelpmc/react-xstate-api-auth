@@ -5,14 +5,14 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import 'normalize.css';
 import './index.css';
 
-import App from './components/App';
 import AuthProvider from './provider/';
+import App from './components/App';
 
 ReactDOM.render(
-  <AuthProvider>
-    <Router>
+  <Router>
+    <AuthProvider>
       <App />
-    </Router>
-  </AuthProvider>,
+    </AuthProvider>
+  </Router>,
   document.getElementById('root')
 );
