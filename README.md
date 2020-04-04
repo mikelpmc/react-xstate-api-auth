@@ -2,7 +2,7 @@
 
 Basic demo to show the usage of React and Xstate with authentication flow
 
-You can visualize the autmachine here: https://xstate.js.org/viz/?gist=94e9a29e1ab016e06b8b354b9d558cf2
+You can visualize the auth machine here: https://xstate.js.org/viz/?gist=94e9a29e1ab016e06b8b354b9d558cf2
 
 Project Structure:
 
