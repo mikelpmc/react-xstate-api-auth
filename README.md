@@ -1,11 +1,13 @@
-# React Context API Demo
+# React xstate auth demo
 
 Basic demo to show the usage of React and Xstate with authentication flow
+
+You can visualize the autmachine here: https://xstate.js.org/viz/?gist=94e9a29e1ab016e06b8b354b9d558cf2
 
 Project Structure:
 
 ```sh
-    -api
+    -backend
         -src
             -data
                 -schemas
@@ -15,12 +17,12 @@ Project Structure:
         -index.js
         -.env
 
-    -app
-        -public
+    -frontend
         -src
             -components
-            -logic
+            -machine
             -provider
+            -service
             -utils
             -index.js
         -.env
@@ -28,8 +30,8 @@ Project Structure:
 
 System Requirements:
 
--   Node
--   Mongodb
+- Node
+- Mongodb
 
 Server:
 
