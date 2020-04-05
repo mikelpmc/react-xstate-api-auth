@@ -33,7 +33,7 @@ System Requirements:
 - Node
 - Mongodb
 
-Server:
+Backend:
 
 1. Install the project dependencies
 
@@ -41,7 +41,7 @@ Server:
 $ npm i
 ```
 
-2. Create the .env file on the root of the api/ folder
+2. Create the .env file on the root of the backend/ folder
 
 ```sh
 $ touch .env
@@ -70,7 +70,7 @@ Client:
 $ npm i
 ```
 
-2. Create the .env file on the root of the app/ folder
+2. Create the .env file on the root of the frontend/ folder
 
 ```sh
 $ touch .env
@@ -82,7 +82,7 @@ $ touch .env
 REACT_APP_API_BASE_URL=http://localhost:5000/api
 ```
 
-\*Note: In order to enviroment variables work with this react project without touching any config file they all have to start with \*\*REACT_APP\*\*
+\*Note: In order to enviroment variables work with this react project without touching any config file they all have to start with REACT_APP
 
 3. Start the app
 
