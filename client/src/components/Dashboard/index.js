@@ -5,12 +5,12 @@ import './index.css';
 const Dashboard = () => {
   const {
     store,
-    actions: { onRetrieveUser }
+    actions: { onRetrieveUser },
   } = useContext(Context);
 
   useEffect(() => {
     onRetrieveUser();
-  }, [store]);
+  }, [store, onRetrieveUser]);
 
   const loading = 'login.success.retrieve_user.loading';
   const failure = 'login.success.retrieve_user.failure';
