@@ -7,7 +7,7 @@ You can visualize the auth machine here: https://xstate.js.org/viz/?gist=94e9a29
 Project Structure:
 
 ```sh
-    -backend
+    -server
         -src
             -data
                 -schemas
@@ -17,7 +17,7 @@ Project Structure:
         -index.js
         -.env
 
-    -frontend
+    -client
         -src
             -components
             -machine
@@ -33,7 +33,7 @@ System Requirements:
 - Node
 - Mongodb
 
-Backend:
+Server:
 
 1. Install the project dependencies
 
@@ -41,7 +41,7 @@ Backend:
 $ npm i
 ```
 
-2. Create the .env file on the root of the backend/ folder
+2. Create the .env file on the root of the server/ folder
 
 ```sh
 $ touch .env
@@ -70,7 +70,7 @@ Client:
 $ npm i
 ```
 
-2. Create the .env file on the root of the frontend/ folder
+2. Create the .env file on the root of the client/ folder
 
 ```sh
 $ touch .env
